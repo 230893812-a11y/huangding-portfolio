@@ -8,7 +8,7 @@
 (function (global) {
   'use strict';
 
-  var MODEL_URL = 'phoenix/models/phoenix-bird.glb';
+  var MODEL_URL = 'phoenix/models/phoenix-bird-soft.glb';
   var THREE_URL = 'phoenix/vendor/three.min.js';
   var LOADER_URL = 'phoenix/vendor/GLTFLoader.js';
   var dependencyPromise = null;
@@ -232,6 +232,7 @@
     var action = null;
     var clipDuration = 0;
     var wingBones = [];
+    var WING_POSE_DISABLED = true; // 实验：完全关闭翅膀骨骼写入
     var introRaf = 0;
     var introTimer = 0;
     var introSkipped = false;
@@ -362,6 +363,7 @@
     }
 
     function applyWingPose(time) {
+      if (WING_POSE_DISABLED) return;
       if (!wingBones.length) return;
       // Keep both wing planes separated in screen space. The source model is
       // authored as a side-flying bird, so the original subtle offset allowed
