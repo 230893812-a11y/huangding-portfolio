@@ -403,7 +403,7 @@
       model.position.set(-center.x * modelScale, -center.y * modelScale, -center.z * modelScale);
       // Phones need a little more three-quarter view so the far (left) wing
       // stays separated from the torso inside the narrow hero stage.
-      model.rotation.y = -.48;
+      model.rotation.y = -0.78;
       model.rotation.x = .16;
       model.traverse(function (object) {
         if (!object.isMesh) return;
