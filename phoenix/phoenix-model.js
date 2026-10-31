@@ -194,7 +194,7 @@
     var root = new THREE.Group();
     // A slight desktop-left offset keeps the long tail away from the card's
     // right edge while leaving the bird centered on narrow screens.
-    root.position.set(mobile ? -.5 : -.38, .18, 0);
+    root.position.set(mobile ? -.34 : -.38, mobile ? .1 : .18, 0);
     scene.add(root);
     var aura = new THREE.Sprite(new THREE.SpriteMaterial({
       map: makeGlowTexture(THREE),
@@ -401,7 +401,7 @@
       // footprint creates a safe margin for pointer movement on desktop.
       // Increase the current compact model by roughly 30% while keeping the
       // pointer-safe bounds introduced for desktop.
-      var targetDimension = mobile ? 2.3 : 2.82;
+      var targetDimension = mobile ? 2.7 : 2.82;
       modelScale = targetDimension / maxDimension;
       model.scale.setScalar(modelScale);
       model.position.set(-center.x * modelScale, -center.y * modelScale, -center.z * modelScale);
