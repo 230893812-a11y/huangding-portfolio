@@ -318,9 +318,9 @@ if (advancedCanvas && desktopFluidEnabled && 'WebGLRenderingContext' in window) 
       SPLAT_RADIUS: 0.1,
       SPLAT_FORCE: 2600,
       VELOCITY_DISSIPATION: 0.99,
-      DENSITY_DISSIPATION: 1.02,
+      DENSITY_DISSIPATION: 1.06,
       COLOR_UPDATE_SPEED: 5,
-      BRIGHTNESS: 0.34,
+      BRIGHTNESS: 0.22,
       COLOR_PALETTE: ['#ef6949', '#f2b84b', '#79c4bb', '#d8845c'],
       BACK_COLOR: '#f7f4ee'
     });

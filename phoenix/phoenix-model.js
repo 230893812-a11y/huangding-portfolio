@@ -366,9 +366,11 @@
       // Keep both wing planes separated in screen space. The source model is
       // authored as a side-flying bird, so the original subtle offset allowed
       // the far wing to disappear behind the torso for much of the animation.
-      var opening = clamp(state.wing, 0, 1.35) * (mobile ? .2 : .24);
-      var pulse = state.pulse * (mobile ? .12 : .17);
-      var flutter = reduced ? 0 : Math.sin(time * .0052) * (mobile ? .018 : .028);
+      // 叠加旋转会让翅膀平面穿过躯干（穿模）。模型自带动画本身已经够生动，
+      // 这里不再叠加开合角度，只保留极轻微的颤动。
+      var opening = 0;
+      var pulse = 0;
+      var flutter = reduced ? 0 : Math.sin(time * .0052) * (mobile ? .012 : .016);
       wingBones.forEach(function (entry) {
         var bone = entry.bone;
         // The mixer has now supplied the clean authored pose.

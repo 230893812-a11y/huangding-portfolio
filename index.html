@@ -12,7 +12,7 @@
   <link rel="preload" href="phoenix/models/phoenix-bird.glb" as="fetch" type="model/gltf-binary" crossorigin fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23263d3c'/%3E%3Cpath d='M16 44V16h8v20h24v8z' fill='%23f7f4ee'/%3E%3Ccircle cx='50' cy='44' r='4' fill='%23eb6a52'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261031-softer" />
+  <link rel="stylesheet" href="style.css?v=20261031-white" />
   <link rel="stylesheet" href="project-showcase.css?v=20260913-clean1" />
   <link rel="stylesheet" href="project-type-labels.css?v=20260910-preview1" />
   <link rel="stylesheet" href="project-polish.css?v=20260919-project-priority1" />
@@ -22,7 +22,6 @@
   <canvas id="fluidCanvas" class="fluid-canvas fluid-advanced is-hidden" aria-hidden="true"></canvas>
   <canvas id="fluidFallback" class="fluid-canvas fluid-fallback" aria-hidden="true"></canvas>
   <div class="grain" aria-hidden="true"></div>
-  <div class="resume-orb resume-orb-one" aria-hidden="true"></div><div class="resume-orb resume-orb-two" aria-hidden="true"></div>
   <header class="topbar">
     <a class="brand" href="#top" aria-label="返回顶部">
       <span class="brand-mark">L<span>.</span></span>
@@ -244,7 +243,7 @@
     <button class="lightbox-next" type="button" aria-label="下一张">›</button>
   </div>
   <!-- Version query keeps the 3D-only model script fresh in static hosting. -->
-  <script src="phoenix/phoenix-model.js?v=20261031-motion-on"></script>
+  <script src="phoenix/phoenix-model.js?v=20261031-noclip"></script>
   <script>
     (function () {
       var status = document.querySelector('#phoenixStatus');
@@ -307,7 +306,7 @@
       }).catch(function () { document.body.classList.add('phoenix-failed'); });
     }());
   </script>
-  <script src="script.js?v=20261031-soft-fluid"></script>
+  <script src="script.js?v=20261031-pale"></script>
   <script>
     (function () {
       var projects = document.getElementById('projects');
