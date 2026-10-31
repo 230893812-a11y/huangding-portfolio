@@ -8,7 +8,7 @@
 (function (global) {
   'use strict';
 
-  var MODEL_URL = 'phoenix/models/phoenix-bird-soft.glb';
+  var MODEL_URL = 'phoenix/models/phoenix-bird-webp.glb';
   var THREE_URL = 'phoenix/vendor/three.min.js';
   var LOADER_URL = 'phoenix/vendor/GLTFLoader.js';
   var dependencyPromise = null;
