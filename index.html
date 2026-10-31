@@ -12,7 +12,7 @@
   <link rel="preload" href="phoenix/models/phoenix-bird.glb" as="fetch" type="model/gltf-binary" crossorigin fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23263d3c'/%3E%3Cpath d='M16 44V16h8v20h24v8z' fill='%23f7f4ee'/%3E%3Ccircle cx='50' cy='44' r='4' fill='%23eb6a52'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261031-fluid-on" />
+  <link rel="stylesheet" href="style.css?v=20261031-loading" />
   <link rel="stylesheet" href="project-showcase.css?v=20260913-clean1" />
   <link rel="stylesheet" href="project-type-labels.css?v=20260910-preview1" />
   <link rel="stylesheet" href="project-polish.css?v=20260919-project-priority1" />
@@ -75,6 +75,7 @@
           </div>
           <div id="phoenixStage" class="phoenix-stage" aria-label="凤凰互动舞台"></div>
           <div class="phoenix-hud" aria-hidden="true"><span>PHOENIX / INTERACTIVE</span></div>
+          <div class="phoenix-loading" aria-hidden="true"><span>载入凤凰模型</span></div>
           <div class="visual-core"><span>HD</span><small>LEARN / BUILD / GROW</small></div>
           <div class="visual-note note-bottom">ZHONGSHAN · 2026</div>
         </div>
@@ -297,12 +298,13 @@
         window.clearTimeout(loadingTimer);
         api = instance;
         window.phoenixApi = instance;
+        document.body.classList.add('phoenix-ready');
         if (pendingBurst && api && api.burst) { api.burst(); pendingBurst = false; }
         if (pendingSkip && api && api.skipIntro) { api.skipIntro(); pendingSkip = false; }
         if (paused && api && api.pause) api.pause();
         if (api && api.renderer) setStatus(api.isModel ? '鼠标/触摸跟随 · 滚动俯冲' : '备用凤凰视觉 · 滚动俯冲');
         else setStatus('3D 凤凰不可用 · 可继续浏览');
-      }).catch(function () { setStatus('3D 凤凰不可用 · 可继续浏览'); });
+      }).catch(function () { document.body.classList.add('phoenix-failed'); });
     }());
   </script>
   <script src="script.js?v=20261031-vendored-fluid"></script>
