@@ -232,7 +232,7 @@
     var action = null;
     var clipDuration = 0;
     var wingBones = [];
-    var WING_POSE_DISABLED = true; // 实验：完全关闭翅膀骨骼写入
+    var WING_POSE_DISABLED = false; // 只做极小幅度跟随，不参与姿态塑形
     var introRaf = 0;
     var introTimer = 0;
     var introSkipped = false;
@@ -372,13 +372,15 @@
       // 这里不再叠加开合角度，只保留极轻微的颤动。
       var opening = 0;
       var pulse = 0;
-      var flutter = reduced ? 0 : Math.sin(time * .0052) * (mobile ? .012 : .016);
+      // 只叠一层低频、极小角度的跟随（约 1°），让翅膀不至于像刚体。
+      var flutter = reduced ? 0 : Math.sin(time * .0011) * (mobile ? .012 : .018);
+      var sway = reduced ? 0 : Math.sin(time * .0007 + 1.3) * (mobile ? .008 : .012);
       wingBones.forEach(function (entry) {
         var bone = entry.bone;
         // The mixer has now supplied the clean authored pose.
         var weight = entry.weight;
-        var x = mobile ? flutter * entry.side * weight : -entry.side * (opening + pulse) * weight + flutter * entry.side * weight;
-        var z = entry.side * (mobile ? .12 : (opening * .48 + pulse * .72)) * weight;
+        var x = flutter * entry.side * weight;
+        var z = sway * entry.side * weight;
         bone.rotation.x += x;
         bone.rotation.z += z;
         entry.lastX = x;
