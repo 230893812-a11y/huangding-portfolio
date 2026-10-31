@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preload" href="phoenix/models/phoenix-bird.glb" as="fetch" type="model/gltf-binary" crossorigin fetchpriority="high">
+  <link rel="preload" href="phoenix/assets/phoenix-poster.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23263d3c'/%3E%3Cpath d='M16 44V16h8v20h24v8z' fill='%23f7f4ee'/%3E%3Ccircle cx='50' cy='44' r='4' fill='%23eb6a52'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20261031-fluidrestore" />
@@ -72,7 +72,7 @@
             <span class="phoenix-flare flare-left"></span><span class="phoenix-flare flare-right"></span>
             <span class="phoenix-spark spark-one">✦</span><span class="phoenix-spark spark-two">✦</span>
           </div>
-          <div id="phoenixStage" class="phoenix-stage" aria-label="凤凰互动舞台"></div>
+          <div id="phoenixStage" class="phoenix-stage" aria-label="凤凰互动舞台"><img class="phoenix-poster" src="phoenix/assets/phoenix-poster.webp" alt="彩色凤凰" fetchpriority="high" decoding="async"></div>
           <div class="phoenix-hud" aria-hidden="true"><span>PHOENIX / INTERACTIVE</span></div>
           <div class="phoenix-loading" aria-hidden="true"><span>载入凤凰模型</span></div>
           <div class="visual-core"><span>HD</span><small>LEARN / BUILD / GROW</small></div>
@@ -93,7 +93,7 @@
       <div class="section-heading reveal"><p class="section-kicker">01 — JOURNEY</p><h2>我从这些经历里，<br /><span>慢慢找到方向。</span></h2><p class="heading-note">我还在打基础。遇到不会的内容，我会先把问题拆开，做出能运行的版本，再根据测试结果继续修改。</p></div>
       <div class="timeline reveal delay-1">
         <article class="timeline-item featured"><div class="time-meta"><span>实习 6 个月</span><span class="tag">INTERNSHIP</span></div><h3>实习生 / 协作支持 <small>@ 加华微捷科技有限公司</small></h3><p>协助组长整理任务流程和信息记录，统一记录方式并跟进执行；整理的任务材料供组长和团队成员用于信息同步。暂无可核验的量化效率数据。</p><div class="tech-row"><span>团队协作</span><span>信息整理</span><span>任务跟进</span></div></article>
-        <article class="timeline-item"><div class="time-meta"><span>2026.09</span><span class="tag">COMPETITION</span></div><h3>第十九届国际先进机器人及仿真技术大赛 <small>国赛入围 · 水中机器鱼仿真组</small></h3><p>面向单鱼障碍竞速任务，参与 FishSim 控制策略迭代，围绕绕障路径跟踪与航向控制开展调试；结合航向 PID 调节尾鳍摆动与左右胸鳍推力，通过 CSV 运行日志分析轨迹、姿态与控制参数，将仿真竞速用时从 25 秒优化至 15.50 秒，较 60 秒及格时限快 44.50 秒。</p><div class="tech-row"><span>FishSim</span><span>PID 控制</span><span>仿真调试</span><span>日志分析</span></div></article>
+        <article class="timeline-item"><div class="time-meta"><span>2026.10</span><span class="tag">COMPETITION</span></div><h3>第十九届国际先进机器人及仿真技术大赛 <small>国赛入围 · 水中机器鱼仿真组</small></h3><p>面向单鱼障碍竞速任务，参与 FishSim 控制策略迭代，围绕绕障路径跟踪与航向控制开展调试；结合航向 PID 调节尾鳍摆动与左右胸鳍推力，通过 CSV 运行日志分析轨迹、姿态与控制参数，将仿真竞速用时优化至 15.50 秒，较 60 秒及格时限快 44.50 秒。</p><div class="tech-row"><span>FishSim</span><span>PID 控制</span><span>仿真调试</span><span>日志分析</span></div></article>
         <article class="timeline-item"><div class="time-meta"><span>2026 — 至今</span><span class="tag">CAMPUS</span></div><h3>松山职业技术学院 <small>人工智能技术应用 · 中山</small></h3><p>目前主要学习 Python 基础、人工智能应用和 Web 交互。我希望继续做 RAG 知识库、Python 小工具和网页项目，把课程知识放进真实作品里。</p><div class="tech-row"><span>Python 基础</span><span>AI 应用</span><span>Web 实践</span></div></article>
       </div>
     </section>
@@ -243,7 +243,7 @@
     <button class="lightbox-next" type="button" aria-label="下一张">›</button>
   </div>
   <!-- Version query keeps the 3D-only model script fresh in static hosting. -->
-  <script src="phoenix/phoenix-model.js?v=20261101-mirrorB"></script>
+  <script src="phoenix/phoenix-model.js?v=20261101-mirrorB" defer></script>
   <script>
     (function () {
       var status = document.querySelector('#phoenixStatus');
@@ -284,12 +284,26 @@
           }, 40);
         }
       });
-      if (!window.PhoenixHero) { setStatus('3D 凤凰不可用 · 当前浏览器未加载 WebGL'); return; }
-      window.phoenixMount = window.PhoenixHero.mount({
+      if (!window.PhoenixHero) {
+        window.addEventListener('DOMContentLoaded', function () {
+          if (window.PhoenixHero) startPhoenix();
+          else setStatus('3D 凤凰不可用 · 当前浏览器未加载 WebGL');
+        }, { once: true });
+        return;
+      }
+      function mountPhoenix() {
+        window.phoenixMount = window.PhoenixHero.mount({
         container: '#phoenixStage', scrollTrigger: '#about', scrollEnd: '+=480',
         scrollDistanceDesktop: 480, scrollDistanceMobile: 430,
         clickable: true, debug: false, loadOnReducedMotion: true
-      });
+        });
+      }
+      var startPhoenix = function () {
+        if ('requestIdleCallback' in window) window.requestIdleCallback(mountPhoenix, { timeout: 1400 });
+        else window.setTimeout(mountPhoenix, 700);
+      };
+      if (document.readyState === 'complete') startPhoenix();
+      else window.addEventListener('load', startPhoenix, { once: true });
       var loadingTimer = window.setTimeout(function () {
         if (!api) setStatus('3D 凤凰不可用 · 网络较慢，仍可继续浏览');
       }, 6000);
@@ -442,3 +456,4 @@
   </script>
 </body>
 </html>
+
