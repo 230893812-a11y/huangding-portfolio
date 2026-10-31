@@ -259,10 +259,10 @@ function drawFluid(time = 0) {
     // Keep the ambient motion broad and unhurried so it supports the phoenix
     // instead of competing with it. Pointer response remains perceptible,
     // but no longer creates abrupt colour splashes behind the copy.
-    const drift = (reduceMotion || paused) ? 0 : Math.sin(time * 0.00008 + blob.phase) * 0.032;
+    const drift = paused ? 0 : Math.sin(time * 0.00008 + blob.phase) * 0.032;
     const pointerPull = pointer.active ? 0.055 : 0.018;
     const x = (blob.x + drift + (pointer.x - 0.5) * pointerPull * (index % 2 ? 1 : -1)) * canvasWidth;
-    const y = (blob.y + Math.cos(time * 0.00007 + blob.phase) * ((reduceMotion || paused) ? 0 : 0.024) + (pointer.y - 0.5) * pointerPull) * canvasHeight;
+    const y = (blob.y + Math.cos(time * 0.00007 + blob.phase) * (paused ? 0 : 0.024) + (pointer.y - 0.5) * pointerPull) * canvasHeight;
     const radius = base * blob.size;
     const [r, g, b] = blob.color;
     const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
@@ -274,7 +274,7 @@ function drawFluid(time = 0) {
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
   });
-  if (!reduceMotion && fluidRunning) fluidRaf = window.requestAnimationFrame(drawFluid);
+  if (fluidRunning) fluidRaf = window.requestAnimationFrame(drawFluid);
 }
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('pointermove', event => {
@@ -291,7 +291,6 @@ const advancedCanvas = document.querySelector('#fluidCanvas');
 const smallScreen = window.matchMedia?.('(max-width: 760px)').matches;
 const connection = navigator.connection;
 const desktopFluidEnabled = !smallScreen
-  && !reduceMotion
   && !connection?.saveData;
 if (advancedCanvas && desktopFluidEnabled && 'WebGLRenderingContext' in window) {
   window.addEventListener('pointermove', event => {
@@ -303,7 +302,7 @@ if (advancedCanvas && desktopFluidEnabled && 'WebGLRenderingContext' in window) 
   // v0.6.1 exposes the simulation(canvas, options) API used below.  Newer
   // releases use a class-based API, so pin this compatible MIT version for
   // a stable static-page deployment.
-  import('https://esm.run/webgl-fluid-enhanced@0.6.1').then(module => {
+  import('./vendor/webgl-fluid-enhanced.esm.js').then(module => {
     const fluid = module.default || module;
     advancedFluid = fluid;
     fluid.simulation(advancedCanvas, {
@@ -349,7 +348,7 @@ function setAmbientMotion(paused) {
   if (paused && fluidRaf) {
     window.cancelAnimationFrame(fluidRaf);
     fluidRaf = 0;
-  } else if (!paused && !reduceMotion && !fluidRaf) {
+  } else if (!paused && !fluidRaf) {
     fluidRaf = window.requestAnimationFrame(drawFluid);
   }
   if (advancedFluid && typeof advancedFluid.pause === 'function' && advancedFluidPaused !== paused) {
@@ -362,7 +361,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     if (fluidRaf) window.cancelAnimationFrame(fluidRaf);
     fluidRaf = 0;
-  } else if (!reduceMotion && fluidRunning && !fluidRaf) {
+  } else if (fluidRunning && !fluidRaf) {
     fluidRaf = window.requestAnimationFrame(drawFluid);
   }
 });

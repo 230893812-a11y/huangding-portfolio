@@ -542,11 +542,11 @@
         apply(time);
         renderer.render(scene, camera);
       }
-      if (!reduced && inViewport && pageVisible && !paused) raf = global.requestAnimationFrame(render);
+      if (inViewport && pageVisible && !paused) raf = global.requestAnimationFrame(render);
     }
 
     function restartRenderLoop() {
-      if (destroyed || reduced || raf || paused || !inViewport || !pageVisible) return;
+      if (destroyed || raf || paused || !inViewport || !pageVisible) return;
       clock.getDelta();
       raf = global.requestAnimationFrame(render);
     }

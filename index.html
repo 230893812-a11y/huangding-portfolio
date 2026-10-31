@@ -95,7 +95,7 @@
       <div class="section-heading reveal"><p class="section-kicker">01 — JOURNEY</p><h2>我从这些经历里，<br /><span>慢慢找到方向。</span></h2><p class="heading-note">我还在打基础。遇到不会的内容，我会先把问题拆开，做出能运行的版本，再根据测试结果继续修改。</p></div>
       <div class="timeline reveal delay-1">
         <article class="timeline-item featured"><div class="time-meta"><span>实习 6 个月</span><span class="tag">INTERNSHIP</span></div><h3>实习生 / 协作支持 <small>@ 加华微捷科技有限公司</small></h3><p>协助组长整理任务流程和信息记录，统一记录方式并跟进执行；整理的任务材料供组长和团队成员用于信息同步。暂无可核验的量化效率数据。</p><div class="tech-row"><span>团队协作</span><span>信息整理</span><span>任务跟进</span></div></article>
-        <article class="timeline-item"><div class="time-meta"><span>2026.09</span><span class="tag">COMPETITION</span></div><h3>RST 竞赛训练营 <small>入营选拔</small></h3><p>完成在线简历和坦克大战附加题。我用 Codex、DeepSeek 辅助开发，也在小组和社区交流中练习需求拆解、测试和交付。</p><div class="tech-row"><span>竞赛练习</span><span>AI 辅助开发</span><span>项目交付</span><span>社区交流</span></div></article>
+        <article class="timeline-item"><div class="time-meta"><span>2026.09</span><span class="tag">COMPETITION</span></div><h3>第十九届国际先进机器人及仿真技术大赛 <small>国赛入围 · 水中机器鱼仿真组</small></h3><p>面向单鱼障碍竞速任务，参与 FishSim 控制策略迭代，围绕绕障路径跟踪与航向控制开展调试；结合航向 PID 调节尾鳍摆动与左右胸鳍推力，通过 CSV 运行日志分析轨迹、姿态与控制参数，将仿真竞速用时从 25 秒优化至 15.50 秒，较 60 秒及格时限快 44.50 秒。</p><div class="tech-row"><span>FishSim</span><span>PID 控制</span><span>仿真调试</span><span>日志分析</span></div></article>
         <article class="timeline-item"><div class="time-meta"><span>2026 — 至今</span><span class="tag">CAMPUS</span></div><h3>松山职业技术学院 <small>人工智能技术应用 · 中山</small></h3><p>目前主要学习 Python 基础、人工智能应用和 Web 交互。我希望继续做 RAG 知识库、Python 小工具和网页项目，把课程知识放进真实作品里。</p><div class="tech-row"><span>Python 基础</span><span>AI 应用</span><span>Web 实践</span></div></article>
       </div>
     </section>
@@ -245,7 +245,7 @@
     <button class="lightbox-next" type="button" aria-label="下一张">›</button>
   </div>
   <!-- Version query keeps the 3D-only model script fresh in static hosting. -->
-  <script src="phoenix/phoenix-model.js?v=20260926-wing-aligned"></script>
+  <script src="phoenix/phoenix-model.js?v=20261031-reduced-render"></script>
   <script>
     (function () {
       var status = document.querySelector('#phoenixStatus');
@@ -290,7 +290,7 @@
       window.phoenixMount = window.PhoenixHero.mount({
         container: '#phoenixStage', scrollTrigger: '#about', scrollEnd: '+=480',
         scrollDistanceDesktop: 480, scrollDistanceMobile: 430,
-        clickable: true, debug: false
+        clickable: true, debug: false, loadOnReducedMotion: true
       });
       var loadingTimer = window.setTimeout(function () {
         if (!api) setStatus('3D 凤凰不可用 · 网络较慢，仍可继续浏览');
@@ -307,7 +307,7 @@
       }).catch(function () { setStatus('3D 凤凰不可用 · 可继续浏览'); });
     }());
   </script>
-  <script src="script.js?v=20260919-mobile-focus1"></script>
+  <script src="script.js?v=20261031-vendored-fluid"></script>
   <script>
     (function () {
       var projects = document.getElementById('projects');
