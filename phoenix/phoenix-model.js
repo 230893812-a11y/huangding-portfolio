@@ -17,8 +17,10 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  // 这块 3D 是作品集的门面，必须动起来。系统的「减少动效」偏好只影响
+  // 页面其余过渡（CSS 那边另有 media query），不再让凤凰停在静止帧上。
   function reducedMotion() {
-    return !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    return false;
   }
 
   function lowPowerDevice() {

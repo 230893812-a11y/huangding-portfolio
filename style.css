@@ -132,7 +132,6 @@ body.advanced-fluid-ready .fluid-advanced{z-index:.7;opacity:.38;mix-blend-mode:
 
 @media(prefers-reduced-motion:reduce){
   body::before{background:rgba(247,244,238,.2)}
-  .fluid-canvas{display:none!important}
   .ticker-track,.phoenix-status-dot{animation:none!important}
 }
 
