@@ -11,7 +11,10 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" href="phoenix/assets/phoenix-poster.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23263d3c'/%3E%3Cpath d='M16 44V16h8v20h24v8z' fill='%23f7f4ee'/%3E%3Ccircle cx='50' cy='44' r='4' fill='%23eb6a52'/%3E%3C/svg%3E" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- 字体改成非阻塞：googleapis 在国内经常超时，阻塞样式表会把
+       DOMContentLoaded 和后面 defer 的凤凰脚本一起卡住十几秒 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap"></noscript>
   <link rel="stylesheet" href="style.css?v=20261102-cert-narrow" />
   <link rel="stylesheet" href="project-showcase.css?v=20260913-clean1" />
   <link rel="stylesheet" href="project-type-labels.css?v=20260910-preview1" />
