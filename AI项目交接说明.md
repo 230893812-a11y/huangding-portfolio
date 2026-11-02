@@ -9,8 +9,8 @@
 - 所在地：中山
 - 邮箱：230893812@qq.com
 - GitHub：230893812-a11y
-- 个人简历仓库：<https://github.com/230893812-a11y/improved-octo-palm-tree>
-- 目标网站：<https://230893812-a11y.github.io/improved-octo-palm-tree/>
+- 个人简历仓库：<https://github.com/230893812-a11y/huangding-portfolio>
+- 目标网站：<https://230893812-a11y.github.io/huangding-portfolio/>
 
 ## 2. 交给其他 AI 的任务说明
 
@@ -124,7 +124,7 @@ C:\Users\HD\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pyth
 
 部署地址：
 
-<https://230893812-a11y.github.io/improved-octo-palm-tree/>
+<https://230893812-a11y.github.io/huangding-portfolio/>
 
 ## 8. 已知问题和维护规则
 
