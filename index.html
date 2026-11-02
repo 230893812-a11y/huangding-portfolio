@@ -12,7 +12,7 @@
   <link rel="preload" href="phoenix/assets/phoenix-poster.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23263d3c'/%3E%3Cpath d='M16 44V16h8v20h24v8z' fill='%23f7f4ee'/%3E%3Ccircle cx='50' cy='44' r='4' fill='%23eb6a52'/%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261031-fluidrestore" />
+  <link rel="stylesheet" href="style.css?v=20261102-cert-narrow" />
   <link rel="stylesheet" href="project-showcase.css?v=20260913-clean1" />
   <link rel="stylesheet" href="project-type-labels.css?v=20260910-preview1" />
   <link rel="stylesheet" href="project-polish.css?v=20260919-project-priority1" />
@@ -163,7 +163,7 @@
       <div class="certificate-exhibition reveal delay-2" id="certificateExhibition">
         <div class="certificate-viewport" id="certificateViewport" tabindex="0" role="region" aria-label="左右拖动切换证书，按回车查看高清证书">
           <div class="certificate-stack" id="certificateStack" aria-live="polite"></div>
-          <div class="certificate-drag-hint" aria-hidden="true"><span>←</span> 左右拖动 · 滚轮切换 <span>→</span></div>
+          <div class="certificate-drag-hint" aria-hidden="true"><span>←</span> <i class="hint-text">左右拖动 · 滚轮切换</i> <span>→</span></div>
         </div>
         <aside class="certificate-detail" aria-live="polite">
           <span class="certificate-current" id="certificateCurrent">01 / 19</span>
@@ -243,7 +243,7 @@
     <button class="lightbox-next" type="button" aria-label="下一张">›</button>
   </div>
   <!-- Version query keeps the 3D-only model script fresh in static hosting. -->
-  <script src="phoenix/phoenix-model.js?v=20261101-mirrorB" defer></script>
+  <script src="phoenix/phoenix-model.js?v=20261102-prefetch" defer></script>
   <script>
     (function () {
       var status = document.querySelector('#phoenixStatus');
@@ -284,40 +284,54 @@
           }, 40);
         }
       });
-      if (!window.PhoenixHero) {
-        window.addEventListener('DOMContentLoaded', function () {
-          if (window.PhoenixHero) startPhoenix();
-          else setStatus('3D 凤凰不可用 · 当前浏览器未加载 WebGL');
-        }, { once: true });
-        return;
-      }
       function mountPhoenix() {
         window.phoenixMount = window.PhoenixHero.mount({
         container: '#phoenixStage', scrollTrigger: '#about', scrollEnd: '+=480',
         scrollDistanceDesktop: 480, scrollDistanceMobile: 430,
         clickable: true, debug: false, loadOnReducedMotion: true
         });
+        return window.phoenixMount;
       }
-      var startPhoenix = function () {
-        if ('requestIdleCallback' in window) window.requestIdleCallback(mountPhoenix, { timeout: 1400 });
-        else window.setTimeout(mountPhoenix, 700);
-      };
-      if (document.readyState === 'complete') startPhoenix();
-      else window.addEventListener('load', startPhoenix, { once: true });
-      var loadingTimer = window.setTimeout(function () {
-        if (!api) setStatus('3D 凤凰不可用 · 网络较慢，仍可继续浏览');
-      }, 6000);
-      Promise.resolve(window.phoenixMount).then(function (instance) {
-        window.clearTimeout(loadingTimer);
-        api = instance;
-        window.phoenixApi = instance;
-        document.body.classList.add('phoenix-ready');
-        if (pendingBurst && api && api.burst) { api.burst(); pendingBurst = false; }
-        if (pendingSkip && api && api.skipIntro) { api.skipIntro(); pendingSkip = false; }
-        if (paused && api && api.pause) api.pause();
-        if (api && api.renderer) setStatus(api.isModel ? '鼠标/触摸跟随 · 滚动俯冲' : '备用凤凰视觉 · 滚动俯冲');
-        else setStatus('3D 凤凰不可用 · 可继续浏览');
-      }).catch(function () { document.body.classList.add('phoenix-failed'); });
+      // three.js 和模型字节流并行下载，DOMContentLoaded 就开始，别等 window.load。
+      function startPhoenix() {
+        return new Promise(function (resolve) {
+          var run = function () { resolve(mountPhoenix()); };
+          if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 600 });
+          else window.setTimeout(run, 300);
+        });
+      }
+      function wirePhoenix() {
+        var loadingTimer = window.setTimeout(function () {
+          if (!api) setStatus('3D 凤凰不可用 · 网络较慢，仍可继续浏览');
+        }, 8000);
+        startPhoenix().then(function (instance) {
+          window.clearTimeout(loadingTimer);
+          api = instance;
+          window.phoenixApi = instance;
+          document.body.classList.add('phoenix-ready');
+          if (pendingBurst && api && api.burst) { api.burst(); pendingBurst = false; }
+          if (pendingSkip && api && api.skipIntro) { api.skipIntro(); pendingSkip = false; }
+          if (paused && api && api.pause) api.pause();
+          if (api && api.renderer) setStatus(api.isModel ? '鼠标/触摸跟随 · 滚动俯冲' : '备用凤凰视觉 · 滚动俯冲');
+          else setStatus('3D 凤凰不可用 · 可继续浏览');
+        }).catch(function () {
+          window.clearTimeout(loadingTimer);
+          document.body.classList.add('phoenix-failed');
+          setStatus('3D 凤凰不可用 · 可继续浏览');
+        });
+      }
+      // 带 defer 的 phoenix-model.js 在 DOMContentLoaded 之前一定已经执行完，
+      // 所以在这里挂载，window.PhoenixHero 不会还是 undefined。
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+          if (window.PhoenixHero) wirePhoenix();
+          else setStatus('3D 凤凰不可用 · 当前浏览器未加载 WebGL');
+        }, { once: true });
+      } else if (window.PhoenixHero) {
+        wirePhoenix();
+      } else {
+        setStatus('3D 凤凰不可用 · 当前浏览器未加载 WebGL');
+      }
     }());
   </script>
   <script src="script.js?v=20261031-fluidrestore"></script>
@@ -350,6 +364,7 @@
     (function () {
       var viewport = document.querySelector('#certificateViewport');
       var stack = document.querySelector('#certificateStack');
+      var dragHint = document.querySelector('.certificate-drag-hint .hint-text');
       var detailTitle = document.querySelector('#certificateTitle');
       var detailCategory = document.querySelector('#certificateCategory');
       var current = document.querySelector('#certificateCurrent');
@@ -383,10 +398,42 @@
       // 首次进入只展示 5 张重点证书；展开列表仍保留全部 19 张。
       var featuredCards = cards.filter(function (entry) { return entry.source.dataset.featured === 'true'; });
       var visibleItems = featuredCards.length ? featuredCards : cards.slice();
+      // 之前的位移写死成 -520/-300/+300/+520px，手机屏宽只有 390，
+      // 左右邻卡全被推到屏幕外，看起来永远只有一张。这里按舞台实际宽度算。
+      function stageMetrics() {
+        var w = stack.clientWidth || viewport.clientWidth || 320;
+        if (w < 620) {
+          return {
+            narrow: true, w: w,
+            card: Math.round(w * 0.62),
+            step1: Math.round(w * 0.40), step2: Math.round(w * 0.70),
+            z0: 50, z1: -95, z2: -175,
+            s0: 1, s1: 0.82, s2: 0.66,
+            rot1: 24, rot2: 44
+          };
+        }
+        return {
+          narrow: false, w: w,
+          card: Math.min(430, Math.round(w * 0.64)),
+          step1: 300, step2: 520,
+          z0: 70, z1: -95, z2: -175,
+          s0: 1.06, s1: 0.87, s2: 0.7,
+          rot1: 28, rot2: 52
+        };
+      }
       function render() {
         var total = visibleItems.length;
         if (!total) return;
         if (activeIndex >= total) activeIndex = 0;
+        var m = stageMetrics();
+        stack.classList.toggle('is-narrow', m.narrow);
+        if (dragHint) dragHint.textContent = m.narrow ? '左右拖动切换' : '左右拖动 · 滚轮切换';
+        if (m.narrow) {
+          var wanted = String(Math.round(m.card / 1.42 + 110)) + 'px';
+          if (viewport.style.height !== wanted) viewport.style.height = wanted;
+        } else if (viewport.style.height) {
+          viewport.style.height = '';
+        }
         var visibleSet = new Set(visibleItems);
         cards.forEach(function (entry) {
           if (!visibleSet.has(entry)) {
@@ -403,18 +450,26 @@
           var node = entry.node;
           var stageLabel = node.querySelector('.stage-label');
           if (stageLabel) stageLabel.textContent = String(i + 1).padStart(2, '0') + ' / ' + (entry.source.querySelector('.cert-meta small')?.textContent.trim() || 'CERTIFICATE');
-          var transforms = {
-            '-2': 'translate(-50%,-50%) translateX(-520px) translateZ(-90px) rotateY(-52deg) scale(.7)',
-            '-1': 'translate(-50%,-50%) translateX(-300px) translateZ(-30px) rotateY(-28deg) scale(.87)',
-            '0': 'translate(-50%,-50%) translateY(0) translateZ(70px) scale(1.06)',
-            '1': 'translate(-50%,-50%) translateX(300px) translateZ(-30px) rotateY(28deg) scale(.87)',
-            '2': 'translate(-50%,-50%) translateX(520px) translateZ(-90px) rotateY(52deg) scale(.7)'
-          };
+          var dir = offset < 0 ? -1 : 1;
+          var transform;
+          if (abs === 0) {
+            transform = 'perspective(1200px) translate(-50%,-50%) translateZ(' + m.z0 + 'px) scale(' + m.s0 + ')';
+          } else if (abs === 1) {
+            transform = 'perspective(1200px) translate(-50%,-50%) translateX(' + (dir * m.step1) + 'px) translateZ(' + m.z1 + 'px) rotateY(' + (dir * m.rot1) + 'deg) scale(' + m.s1 + ')';
+          } else {
+            transform = 'perspective(1200px) translate(-50%,-50%) translateX(' + (dir * m.step2) + 'px) translateZ(' + m.z2 + 'px) rotateY(' + (dir * m.rot2) + 'deg) scale(' + m.s2 + ')';
+          }
+          node.style.width = m.card + 'px';
           node.hidden = abs > 2;
           node.classList.toggle('is-current', offset === 0);
-          node.style.transform = transforms[String(Math.max(-2, Math.min(2, offset)))] || transforms['0'];
-          node.style.opacity = abs > 2 ? '0' : String(1 - abs * .16);
-          node.style.filter = abs === 0 ? 'none' : 'blur(' + Math.min(2.2, abs * .7) + 'px)';
+          node.style.transform = transform;
+          // 透明度/模糊放在图片上而不是卡片上：卡片本身一旦有 opacity<1 或
+          // filter，就会脱离 preserve-3d 的排序，邻卡会盖到当前卡上面去。
+          var stageImage = node.querySelector('img');
+          if (stageImage) {
+            stageImage.style.opacity = abs > 2 ? '0' : String(1 - abs * .16);
+            stageImage.style.filter = abs === 0 ? 'none' : 'blur(' + Math.min(2.2, abs * .7) + 'px)';
+          }
           node.style.zIndex = String(10 - abs);
           node.setAttribute('aria-current', offset === 0 ? 'true' : 'false');
         });
@@ -452,6 +507,10 @@
       viewport.addEventListener('pointerup', function (event) { if (startX == null) return; var delta = event.clientX - startX; if (Math.abs(delta) > 24) setActive(activeIndex + (delta < 0 ? 1 : -1)); startX = null; });
       viewport.addEventListener('pointercancel', function () { startX = null; });
       render();
+      // 旋转屏幕或改窗口宽度后要重算卡片尺寸和间距
+      var relayout = function () { window.requestAnimationFrame(render); };
+      window.addEventListener('resize', relayout, { passive: true });
+      window.addEventListener('orientationchange', relayout, { passive: true });
     }());
   </script>
 </body>

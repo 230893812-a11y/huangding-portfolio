@@ -92,6 +92,31 @@
     return dependencyPromise;
   }
 
+  // three.min.js（约 600KB）和 GLTFLoader 下载完之后才开始下模型（约 1MB），
+  // 手机上等于串行下载 1.7MB，这就是凤凰迟迟不出现的原因。
+  // 这里先把模型字节流拉进缓存，等 three 就绪后直接 parse，两段并行。
+  var modelBufferPromise = null;
+  function prefetchModel(url) {
+    if (modelBufferPromise) return modelBufferPromise;
+    var target = url || MODEL_URL;
+    if (!global.fetch) {
+      modelBufferPromise = Promise.reject(new Error('无 fetch'));
+      return modelBufferPromise;
+    }
+    modelBufferPromise = global.fetch(target, { priority: 'low', credentials: 'same-origin' })
+      .then(function (response) {
+        if (!response || !response.ok) throw new Error('模型下载失败 ' + (response && response.status));
+        return response.arrayBuffer();
+      });
+    // 失败就退回原来的 loader.load，不影响可用性
+    modelBufferPromise.catch(function () { modelBufferPromise = null; });
+    return modelBufferPromise;
+  }
+
+  function readModelBuffer(url) {
+    return modelBufferPromise || prefetchModel(url);
+  }
+
   function makeGlowTexture(THREE) {
     var canvas = document.createElement('canvas');
     canvas.width = canvas.height = 128;
@@ -647,7 +672,7 @@
 
     var loader = new THREE.GLTFLoader();
     var modelPromise = new Promise(function (resolve, reject) {
-      loader.load(options.modelUrl || MODEL_URL, function (gltf) {
+      function loaded(gltf) {
         try {
           normalizeModel(gltf.scene);
           collectWingBones(gltf.scene);
@@ -668,9 +693,25 @@
           disposeScene();
           reject(error);
         }
-      }, undefined, function (error) {
+      }
+      function failed(error) {
         disposeScene();
         reject(error);
+      }
+      var modelUrl = options.modelUrl || MODEL_URL;
+      if (!global.fetch) {
+        loader.load(modelUrl, loaded, undefined, failed);
+        return;
+      }
+      // 预取到的字节直接 parse，省掉第二次网络往返
+      readModelBuffer(modelUrl).then(function (buffer) {
+        try {
+          loader.parse(buffer, '', loaded, failed);
+        } catch (error) {
+          loader.load(modelUrl, loaded, undefined, failed);
+        }
+      }).catch(function () {
+        loader.load(modelUrl, loaded, undefined, failed);
       });
     });
 
@@ -770,6 +811,7 @@
 
   global.PhoenixHero = {
     mount: mount,
+    prefetchModel: prefetchModel,
     cdn: { three: THREE_URL },
     model: {
       title: 'phoenix bird',
@@ -778,4 +820,8 @@
       license: 'CC BY 4.0'
     }
   };
+
+  // 脚本一解析完就开始拉模型（低优先级），不再等 window.load + 空闲回调。
+  // 省流量模式 / 老设备跳过，避免白下载。
+  if (!lowPowerDevice()) prefetchModel(MODEL_URL);
 }(window));
