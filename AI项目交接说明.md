@@ -74,7 +74,7 @@
 
 ### 项目04：API模型路由一致性检测工具
 
-- GitHub：<https://github.com/230893812-a11y/miniature-fiesta>
+- GitHub：<https://github.com/230893812-a11y/api-compat-checker>
 - 技术：Python、HTTP API、JSON、Bearer鉴权、自动化测试、日志。
 - 功能：检查请求模型与接口返回的 `model` 字段是否一致；支持批量模型、多轮测试、异常状态记录、代理配置、SSL验证开关、日志和退出码。
 - 简历表述：独立开发 Python API 模型路由一致性检测工具，支持批量测试、多轮统计、异常识别和日志记录。
